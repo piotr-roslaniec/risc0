@@ -8,6 +8,7 @@ members = [
     "sha",
     "waldo",
     "wordle",
+    "bls12-381",
 ]
 
 # Always optimize; otherwise tests take excessively long.
