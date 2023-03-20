@@ -14,11 +14,10 @@
 
 #![no_main]
 
-use ark_bls12_381::G1Projective;
-use ark_ff::Zero;
+use ark_bls12_381::{G1Projective};
+use ark_ff::{Zero};
 use risc0_zkvm::guest::env;
-
-use shared::{g1_affine_from_bytes};
+use shared::g1_affine_from_bytes;
 
 risc0_zkvm::guest::entry!(main);
 
@@ -30,6 +29,7 @@ pub fn main() {
         let g1_bytes_len: usize = env::read();
         let g1_bytes: &[u8] = env::read_slice(g1_bytes_len);
         let g1 = g1_affine_from_bytes(g1_bytes);
+
         let g1 = G1Projective::from(g1);
         aggregate += g1;
     }
@@ -43,4 +43,5 @@ pub fn main() {
     assert!(aggregate_matches);
 
     env::commit(&aggregate_matches);
+    env::commit(&true);
 }

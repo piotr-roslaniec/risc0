@@ -1,20 +1,33 @@
 use ark_bls12_381::{Fq12, G1Affine, G2Affine};
+use ark_ff::{FromBytes, PrimeField, ToBytes};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 
 pub type G1Bytes = [u8; 48];
 pub type G2Bytes = [u8; 96];
 pub type Fq12Bytes = [u8; 576];
 
-pub fn g1_affine_to_bytes(g1: &G1Affine) -> G1Bytes {
-    let mut bytes = Vec::new();
-    g1.serialize(&mut bytes).unwrap();
-    let bytes: G1Bytes = bytes.try_into().unwrap();
+pub fn g1_affine_to_bytes(g1: G1Affine) -> [u8; 96] {
+    let x = g1.x;
+    let y = g1.y;
+
+    let mut x_bytes = [0u8; 48];
+    let mut y_bytes = [0u8; 48];
+
+    x.into_repr().write(&mut x_bytes[..]).unwrap();
+    y.into_repr().write(&mut y_bytes[..]).unwrap();
+
+    let bytes: [u8; 96] = [x_bytes, y_bytes].concat().try_into().unwrap();
     bytes
 }
 
 pub fn g1_affine_from_bytes(bytes: &[u8]) -> G1Affine {
-    let bytes: G1Bytes = bytes.try_into().unwrap();
-    G1Affine::deserialize(&bytes[..]).unwrap()
+    let x_bytes: [u8; 48] = bytes[0..48].try_into().unwrap();
+    let y_bytes: [u8; 48] = bytes[48..96].try_into().unwrap();
+
+    let x = ark_bls12_381::Fq::read(&x_bytes[..]).unwrap();
+    let y = ark_bls12_381::Fq::read(&y_bytes[..]).unwrap();
+
+    G1Affine::new(x, y, false)
 }
 
 pub fn g2_affine_to_bytes(g2: &G2Affine) -> G2Bytes {
@@ -55,7 +68,7 @@ mod tests {
         let mut rng = ark_std::test_rng();
 
         let g1 = G1Projective::rand(&mut rng).into_affine();
-        let g1_bytes = g1_affine_to_bytes(&g1);
+        let g1_bytes = g1_affine_to_bytes(g1);
         assert_eq!(g1_bytes.len(), 48);
 
         let g1_new = g1_affine_from_bytes(&g1_bytes);

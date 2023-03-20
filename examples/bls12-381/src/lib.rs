@@ -39,7 +39,7 @@ pub fn setup_g1_addition_prover<'a>(
     let mut expected_output = G1Projective::zero();
     for _ in 0..n_g1 {
         let g1 = G1Projective::rand(&mut rng).into_affine();
-        let g1_bytes = g1_affine_to_bytes(&g1).to_vec();
+        let g1_bytes = g1_affine_to_bytes(g1).to_vec();
         prover.add_input_u32_slice(&to_vec(&g1_bytes.len()).expect("should be serializable"));
         prover.add_input_u8_slice(&g1_bytes);
 
@@ -48,7 +48,7 @@ pub fn setup_g1_addition_prover<'a>(
 
     // Add aggregate to prover
     let expected_aggregate = expected_output.into_affine();
-    let expected_aggregate_bytes = g1_affine_to_bytes(&expected_aggregate).to_vec();
+    let expected_aggregate_bytes = g1_affine_to_bytes(expected_aggregate).to_vec();
     prover.add_input_u32_slice(
         &to_vec(&expected_aggregate_bytes.len()).expect("should be serializable"),
     );
@@ -65,7 +65,7 @@ pub fn setup_pairing_prover<'a>(mut rng: &mut StdRng) -> (Prover<'a>, Fp12<Fq12P
         .expect("Prover should be constructed from matching method code & ID");
 
     // Add inputs to prover
-    let p_bytes = g1_affine_to_bytes(&p).to_vec();
+    let p_bytes = g1_affine_to_bytes(p).to_vec();
     prover.add_input_u32_slice(&to_vec(&p_bytes.len()).expect("should be serializable"));
     prover.add_input_u8_slice(&p_bytes);
 
@@ -92,9 +92,9 @@ mod tests {
     #[test]
     fn bls12_381_g1_addition() {
         let mut rng = ark_std::test_rng();
-        let n_g1 = 1;
+        let n_g1: usize = 2;
 
-        let (mut prover, _expected_aggregate) = setup_g1_addition_prover(&mut rng, n_g1);
+        let (mut prover, _expected_output) = setup_g1_addition_prover(&mut rng, n_g1);
 
         let receipt = prover.run().expect("Code should be provable");
         receipt
