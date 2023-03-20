@@ -162,6 +162,7 @@ dependencies = [
  "ark-serialize",
  "risc0-build",
  "risc0-zkvm",
+ "shared",
 ]
 
 [[package]]
@@ -1410,6 +1411,17 @@ dependencies = [
  "cfg-if",
  "cpufeatures",
  "digest 0.10.6",
+]
+
+[[package]]
+name = "shared"
+version = "0.1.0"
+dependencies = [
+ "ark-bls12-381",
+ "ark-ec",
+ "ark-ff",
+ "ark-serialize",
+ "ark-std",
 ]
 
 [[package]]

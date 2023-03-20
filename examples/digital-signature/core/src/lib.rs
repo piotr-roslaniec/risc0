@@ -27,7 +27,7 @@ pub struct Message {
 impl Display for Message {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         for word in self.msg {
-            core::write!(f, "{:02x?}", word)?;
+            core::write!(f, "{word:02x?}")?;
         }
         Ok(())
     }
@@ -36,7 +36,7 @@ impl Display for Message {
 impl Debug for Message {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         for word in self.msg {
-            core::write!(f, "{:02x?}", word)?;
+            core::write!(f, "{word:02x?}")?;
         }
         Ok(())
     }

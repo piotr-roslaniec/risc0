@@ -12,6 +12,7 @@ risc0-build = { path = "../../../../risc0/build" }
 risc0-zkvm = { path = "../../../../risc0/zkvm", default-features = false, features = [
     "std",
 ] }
+shared = { path = "../../shared" }
 
 ark-bls12-381 = "0.3.0"
 ark-ff = "0.3.0"

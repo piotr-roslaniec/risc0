@@ -1,0 +1,21 @@
+[package]
+
+name = "bls12_381_pairing"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+
+[build-dependencies]
+risc0-build = { path = "../../../../risc0/build" }
+
+[dependencies]
+risc0-zkvm = { path = "../../../../risc0/zkvm", default-features = false, features = [
+    "std",
+] }
+shared = { path = "../../shared" }
+
+ark-bls12-381 = "0.3.0"
+ark-ff = "0.3.0"
+ark-serialize = "0.3.0"
+ark-ec = "0.3.0"
