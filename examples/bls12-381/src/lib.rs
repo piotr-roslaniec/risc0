@@ -94,7 +94,9 @@ mod tests {
         let mut rng = ark_std::test_rng();
         let n_g1: usize = 2;
 
-        let (mut prover, _expected_output) = setup_g1_addition_prover(&mut rng, n_g1);
+        // We're not using ark_serialize here, so this test passes
+        // See g1_affine_to_bytes for the implementation
+        let (mut prover, _) = setup_g1_addition_prover(&mut rng, n_g1);
 
         let receipt = prover.run().expect("Code should be provable");
         receipt
@@ -111,7 +113,9 @@ mod tests {
     fn bls12_381_pairing() {
         let mut rng = ark_std::test_rng();
 
-        let (mut prover, _expected_output) = setup_pairing_prover(&mut rng);
+        // We're using ark_serialize here, and so this test fails with error:
+        // Code should be provable: Cannot expand, max po2 of 24 reached.
+        let (mut prover, _) = setup_pairing_prover(&mut rng);
 
         let receipt = prover.run().expect("Code should be provable");
         receipt
